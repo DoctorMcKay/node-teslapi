@@ -8,7 +8,7 @@ To build a ready to flash one-step setup image, do the following:
 1. Follow the instructions in the pi-gen readme to install the required dependencies
 1. In the pi-gen folder, run:
     ```
-    echo IMG_NAME=teslausb > config
+    echo IMG_NAME=teslapi > config
     rm -rf stage2/EXPORT_NOOBS stage3 stage4 stage5
     mkdir stage7
     touch stage7/EXPORT_IMAGE

@@ -1,7 +1,7 @@
 #!/bin/bash -e
 touch "${ROOTFS_DIR}/boot/ssh"
-install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
-install -m 666 files/teslapi_setup.conf.sample    "${ROOTFS_DIR}/boot/"
+# install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
+# install -m 666 files/teslapi_setup.conf.sample    "${ROOTFS_DIR}/boot/"
 install -m 755 files/node           "${ROOTFS_DIR}/bin/"
 # install -d "${ROOTFS_DIR}/root/bin"
 

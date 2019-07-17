@@ -49,5 +49,5 @@ Parted.mountDisk(CAM_MOUNTPOINT);
 FS.mkdirSync(`${CAM_MOUNTPOINT}/TeslaCam`);
 Parted.unmountDisk(CAM_MOUNTPOINT);
 
-FS.writeFileSync(MASS_STORAGE_CONF_FILE, `options g_mass_storage file=${CAM_DISK_FILE} removable=1 ro=0 stall=0 iSerialNumber=123456`);
+FS.writeFileSync(MASS_STORAGE_CONF_FILE, `options g_mass_storage file=${CAM_DISK_FILE} removable=1 ro=0 stall=0 iSerialNumber=123456\n`);
 Logging.setupInfo('Vdisk created successfully');

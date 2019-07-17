@@ -34,7 +34,31 @@ exports.disconnectFromHost = function() {
 };
 
 exports.fixErrors = function(mountpoint) {
-	// TODO
+	// Find the backing file location
+	let backingFile = null;
+	exec('mount').toString('utf8').split('\n').forEach((line) => {
+		if (line.includes(mountpoint)) {
+			backingFile = line.split(' ')[0];
+		}
+	});
+
+	if (!backingFile) {
+		return 'Could not find backing file in mount output';
+	}
+
+	// Find the loopback device it's mounted with
+	let loopbackDevice = null;
+	exec('losetup -l').toString('utf8').split('\n').forEach((line) => {
+		if (line.includes(backingFile)) {
+			loopbackDevice = line.split(' ')[0];
+		}
+	});
+
+	if (!loopbackDevice) {
+		return 'Could not find loopback device in losetup output';
+	}
+
+	return exec(`fsck "${loopbackDevice}" -- -a`);
 };
 
 function getSecondLineNumber(str) {
