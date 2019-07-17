@@ -18,6 +18,6 @@ if [ "$_IP" ]; then
 fi
 
 
-# TODO
+/bin/node /root/app/init &
 
 exit 0

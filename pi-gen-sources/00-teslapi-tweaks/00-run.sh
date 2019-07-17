@@ -1,5 +1,5 @@
 #!/bin/bash -e
-# install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
+install -m 755 files/rc.local		"${ROOTFS_DIR}/etc/"
 install -m 666 files/teslapi_setup.json.sample    "${ROOTFS_DIR}/boot/"
 install -m 755 files/node           "${ROOTFS_DIR}/bin/"
 
