@@ -1,6 +1,6 @@
 --- stage7/rootfs/boot/config.txt
 +++ stage7/rootfs/boot/config.txt
-@@ -54,3 +54,4 @@
+@@ -54,6 +54,7 @@
 
  # Enable audio (loads snd_bcm2835)
  dtparam=audio=on

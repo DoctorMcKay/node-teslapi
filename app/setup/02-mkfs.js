@@ -2,7 +2,6 @@ const FS = require('fs');
 
 const Logging = require('../components/logging');
 const Parted = require('../components/parted');
-const System = require('../components/system');
 
 const MUTABLE_PARTITION_SIZE_BYTES = 104857600; // 100 MiB
 
