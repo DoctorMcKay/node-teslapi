@@ -1,42 +1,42 @@
-const exec = require('child_process').execSync;
+const {exec} = require('./exec');
 
-exports.allocate = function(sizeInKb, filename) {
-	exec(`fallocate -l ${sizeInKb}K "${filename}"`);
-	exec(`sfdisk ${filename}`, {"input": "type=c"});
+exports.allocate = async function(sizeInKb, filename) {
+	await exec(`fallocate -l ${sizeInKb}K "${filename}"`);
+	await exec(`sfdisk ${filename}`, {"input": "type=c"});
 };
 
-exports.getFirstPartitionOffset = function(filename) {
-	let sizeInBytes = getSecondLineNumber(exec(`sfdisk -l -o Size -q --bytes "${filename}"`));
-	let sizeInSectors = getSecondLineNumber(exec(`sfdisk -l -o Sectors -q "${filename}"`));
+exports.getFirstPartitionOffset = async function(filename) {
+	let sizeInBytes = getSecondLineNumber(await exec(`sfdisk -l -o Size -q --bytes "${filename}"`));
+	let sizeInSectors = getSecondLineNumber(await exec(`sfdisk -l -o Sectors -q "${filename}"`));
 	let sectorSize = sizeInBytes / sizeInSectors;
-	let partitionStartSector = getSecondLineNumber(exec(`sfdisk -l -o Start -q "${filename}"`));
+	let partitionStartSector = getSecondLineNumber(await exec(`sfdisk -l -o Start -q "${filename}"`));
 	return partitionStartSector * sectorSize;
 };
 
-exports.setupLoopDevice = function(filename, offset) {
-	exec(`losetup -o ${offset} loop0 "${filename}"`);
+exports.setupLoopDevice = async function(filename, offset) {
+	await exec(`losetup -o ${offset} loop0 "${filename}"`);
 };
 
-exports.formatVfat = function(label) {
-	exec(`mkfs.vfat /dev/loop0 -F 32 -n "${label}"`);
+exports.formatVfat = async function(label) {
+	await exec(`mkfs.vfat /dev/loop0 -F 32 -n "${label}"`);
 };
 
-exports.destroyLoopDevice = function() {
-	exec(`losetup -d /dev/loop0`);
+exports.destroyLoopDevice = async function() {
+	await exec(`losetup -d /dev/loop0`);
 };
 
-exports.connectToHost = function() {
-	exec('modprobe g_mass_storage');
+exports.connectToHost = async function() {
+	await exec('modprobe g_mass_storage');
 };
 
-exports.disconnectFromHost = function() {
-	exec('modprobe -r g_mass_storage');
+exports.disconnectFromHost = async function() {
+	await exec('modprobe -r g_mass_storage');
 };
 
-exports.fixErrors = function(mountpoint) {
+exports.fixErrors = async function(mountpoint) {
 	// Find the backing file location
 	let backingFile = null;
-	exec('mount').toString('utf8').split('\n').forEach((line) => {
+	(await exec('mount')).split('\n').forEach((line) => {
 		if (line.includes(mountpoint)) {
 			backingFile = line.split(' ')[0];
 		}
@@ -48,7 +48,7 @@ exports.fixErrors = function(mountpoint) {
 
 	// Find the loopback device it's mounted with
 	let loopbackDevice = null;
-	exec('losetup -l').toString('utf8').split('\n').forEach((line) => {
+	(await exec('losetup -l')).split('\n').forEach((line) => {
 		if (line.includes(backingFile)) {
 			loopbackDevice = line.split(' ')[0];
 		}
@@ -58,9 +58,9 @@ exports.fixErrors = function(mountpoint) {
 		return 'Could not find loopback device in losetup output';
 	}
 
-	return exec(`fsck "${loopbackDevice}" -- -a`);
+	return await exec(`fsck "${loopbackDevice}" -- -a`);
 };
 
 function getSecondLineNumber(str) {
-	return parseInt(str.toString('ascii').split('\n')[1].trim(), 10);
+	return parseInt(str.split('\n')[1].trim(), 10);
 }

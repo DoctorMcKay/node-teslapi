@@ -19,9 +19,9 @@ git clone https://github.com/DoctorMcKay/node-teslapi teslapi
 cp -R teslapi/pi-gen-sources/00-teslapi-tweaks ../stage7
 cp -R teslapi/app ../stage7/00-teslapi-tweaks/files
 cp -R teslapi/bin ../stage7/00-teslapi-tweaks/files
-curl -L https://nodejs.org/dist/v10.16.0/node-v10.16.0-linux-armv6l.tar.xz > node-v10.16.0-linux-armv6l.tar.xz
-tar -xf node-v10.16.0-linux-armv6l.tar.xz
-mv node-v10.16.0-linux-armv6l/bin/node ../stage7/00-teslapi-tweaks/files/node
+curl -L https://unofficial-builds.nodejs.org/download/release/v12.6.0/node-v12.6.0-linux-armv6l.tar.xz > node-v12.6.0-linux-armv6l.tar.xz
+tar -xf node-v12.6.0-linux-armv6l.tar.xz
+mv node-v12.6.0-linux-armv6l/bin/node ../stage7/00-teslapi-tweaks/files/node
 cd ..
 rm -rf temp
 chmod +x stage7/00-teslapi-tweaks/00-run.sh

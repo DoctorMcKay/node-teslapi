@@ -12,4 +12,7 @@ if (currentUser != 'root') {
 	Logging.fatalSetupError(`TeslaPi init script needs to be run as root; ran as ${currentUser}`); // exits
 }
 
-require('./setup/00-run');
+main();
+async function main() {
+	await require('./setup/00-run').main();
+}

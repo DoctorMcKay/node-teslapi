@@ -1,5 +1,6 @@
-const exec = require('child_process').execSync;
 const FS = require('fs');
+
+const System = require('./system');
 
 const SETUP_LOG_PATH = '/boot/teslapi-setup.log';
 
@@ -9,7 +10,7 @@ const SETUP_LOG_PATH = '/boot/teslapi-setup.log';
 exports.fatalSetupError = function(msg) {
 	console.error('[FATAL] ' + msg);
 	writeToLog(SETUP_LOG_PATH, `[FATAL] ${msg}`);
-	exec('halt');
+	System.setLedSteadyBlink(50, 50);
 	process.exit(1);
 };
 

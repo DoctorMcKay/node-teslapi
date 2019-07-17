@@ -3,6 +3,8 @@
 # Remove the "#" from the beginning of a line to enable it.
 # Rename this file to teslapi_setup.conf and make sure it's in the boot partition/directory.
 
-# Configure your Wi-Fi network. A Wi-Fi connection is required to complete setup.
+# Configure your Wi-Fi network. A Wi-Fi connection with Internet access is required to complete setup.
+# Wi-Fi connections without a password are not supported.
 wifi_ssid="Your WiFi Name"
 wifi_pass="Your WiFi Password"
+wifi_country=US
