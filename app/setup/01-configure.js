@@ -1,3 +1,4 @@
+const Dotenv = require('dotenv');
 const exec = require('child_process').execSync;
 const FS = require('fs');
 
@@ -30,14 +31,8 @@ try {
 	exec('/root/bin/remount_fs_rw.sh');
 }
 
-try {
-	FS.unlinkSync(LOCAL_CONFIG_FILE_PATH);
-} catch (ex) {
-	// don't care if it doesn't already exist
-}
-
-exec(`mv ${BOOT_PARTITION_CONFIG_FILE_PATH} ${LOCAL_CONFIG_FILE_PATH}`);
-
+// Parse the config file in the boot partition
+let config = Dotenv.parse(FS.readFileSync(BOOT_PARTITION_CONFIG_FILE_PATH));
 // TODO
 
 System.reboot();
