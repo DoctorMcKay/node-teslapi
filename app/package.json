@@ -1,0 +1,10 @@
+{
+	"name": "teslapi",
+	"private": true,
+	"version": "1.0.0",
+	"author": "Alex Corn <mckay@doctormckay.com>",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/DoctorMcKay/node-teslapi.git"
+	}
+}
