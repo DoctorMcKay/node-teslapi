@@ -38,3 +38,8 @@ will indicate status during setup:
 
 While TeslaPi is configuring itself, you can SSH into it using USB ethernet. Plug it into your PC via the Pi's USB data
 port (not its power port) and an ethernet adapter will appear on your PC. USB ethernet is disabled once setup is complete.
+
+### Building From Source
+
+You can build your own image from the latest source, if you wish. Follow the instructions in the
+[pi-gen-sources](https://github.com/DoctorMcKay/node-teslapi/tree/master/pi-gen-sources) readme.
