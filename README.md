@@ -30,7 +30,7 @@ will indicate status during setup:
 
 1. On semi-steadily with occasional pulses: booting up
 2. One flash: Writing config files
-2. Steady slow flashes: Waiting for Internet connectivity
+3. Steady slow flashes: Waiting for Internet connectivity
 4. Two flashes: Creating and formatting partitions on the SD card
 5. Three flashes: Allocating space for the virtual disk
 6. Four flashes: Converting root filesystem to read-only
@@ -38,6 +38,8 @@ will indicate status during setup:
 
 While TeslaPi is configuring itself, you can SSH into it using USB ethernet. Plug it into your PC via the Pi's USB data
 port (not its power port) and an ethernet adapter will appear on your PC. USB ethernet is disabled once setup is complete.
+
+The Pi will reboot a couple times automatically during the setup procedure.
 
 ### Building From Source
 
