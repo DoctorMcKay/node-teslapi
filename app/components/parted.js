@@ -39,6 +39,18 @@ exports.getDiskIdentifier = function() {
 	return exec(`fdisk -l ${DISK_PATH}`).toString('utf8').match(/Disk identifier: 0x([0-9a-f]{8})/)[1];
 };
 
+exports.mountAllDisks = function() {
+	exec('mount -a');
+};
+
+exports.mountDisk = function(mountpoint) {
+	exec(`mount ${mountpoint}`);
+};
+
+exports.unmountDisk = function(mountpoint) {
+	exec(`umount ${mountpoint}`);
+};
+
 function bytesToNumber(value) {
 	return parseInt(value.replace('B', ''), 10);
 }

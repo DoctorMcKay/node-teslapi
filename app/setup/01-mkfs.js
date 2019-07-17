@@ -4,8 +4,7 @@ const Logging = require('../components/logging');
 const Parted = require('../components/parted');
 const System = require('../components/system');
 
-const ONE_MEGABYTE = 1000000;
-const MUTABLE_PARTITION_SIZE_BYTES = 100 * ONE_MEGABYTE;
+const MUTABLE_PARTITION_SIZE_BYTES = 104857600; // 100 MiB
 
 let existingPartitions = Parted.listPartitions();
 if (existingPartitions.partitions.length == 4 && existingPartitions.partitions[2].filesystem == 'ext4' && existingPartitions.partitions[3].filesystem == 'xfs') {
@@ -51,9 +50,12 @@ Logging.setupInfo(`New disk identifier: ${diskIdentifier}`);
 
 let fstab = FS.readFileSync('/etc/fstab').toString('utf8');
 fstab = fstab.replace(/PARTUUID=[0-9a-f]{8}/g, `PARTUUID=${diskIdentifier}`);
-fstab += 'LABEL=mutable /mnt/mutable xfs auto,rw,noatime 0 2\n';
-fstab += 'LABEL=backingfiles /mnt/backingfiles ext4 auto,rw 0 2\n';
+fstab += `PARTUUID=${diskIdentifier}-03 /mnt/mutable ext4 auto,rw 0 2\n`;
+fstab += `PARTUUID=${diskIdentifier}-04 /mnt/backingfiles xfs auto,rw,noatime 0 2\n`;
 FS.writeFileSync('/etc/fstab', fstab);
 
 Logging.setupInfo('/etc/fstab updated');
-System.reboot();
+
+Parted.mountAllDisks();
+FS.writeFileSync('/mnt/mutable/.setup', 'Don\'t delete or move this file or teslapi won\'t boot anymore.\n');
+FS.writeFileSync('/mnt/backingfiles/.setup', 'Don\'t delete or move this file or teslapi won\'t boot anymore.\n');
