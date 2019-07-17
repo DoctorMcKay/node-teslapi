@@ -5,7 +5,7 @@ const FS = require('fs');
 const Logging = require('../components/logging');
 const System = require('../components/system');
 
-const BOOT_PARTITION_CONFIG_FILE_PATH = '/boot/teslapi_setup.json';
+const BOOT_PARTITION_CONFIG_FILE_PATH = '/boot/teslapi_setup.conf';
 const LOCAL_CONFIG_FILE_PATH = __dirname + '/../config.json';
 
 if (!FS.existsSync(BOOT_PARTITION_CONFIG_FILE_PATH)) {
