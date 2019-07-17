@@ -10,6 +10,12 @@ const LOCAL_CONFIG_FILE_PATH = __dirname + '/../config.json';
 if (!FS.existsSync(BOOT_PARTITION_CONFIG_FILE_PATH)) {
 	// No config file to use
 	Logging.setupInfo(BOOT_PARTITION_CONFIG_FILE_PATH + ' does not exist, not reconfiguring');
+
+	if (!FS.existsSync(LOCAL_CONFIG_FILE_PATH)) {
+		// No local config and no config file on boot partition? panic!
+		Logging.fatalSetupError(`No configuration file is present at ${BOOT_PARTITION_CONFIG_FILE_PATH}`);
+	}
+
 	return;
 }
 
