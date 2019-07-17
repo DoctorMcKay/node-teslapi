@@ -7,7 +7,7 @@
 		"type": "git",
 		"url": "https://github.com/DoctorMcKay/node-teslapi.git"
 	},
-	"dependencies":  {
+	"dependencies": {
 		"teslajs": "^4.3.11"
 	}
 }
