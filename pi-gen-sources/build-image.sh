@@ -27,4 +27,9 @@ cd ..
 rm -rf temp
 chmod +x stage7/00-teslapi-tweaks/00-run.sh
 
+cd stage7/00-teslapi-tweaks/files/app
+npm install
+
+cd ../../../..
+
 sudo ./build.sh

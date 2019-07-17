@@ -4,14 +4,11 @@ install -m 666 files/teslapi_setup.json.sample    "${ROOTFS_DIR}/boot/"
 install -m 755 files/node           "${ROOTFS_DIR}/bin/"
 
 install -d "${ROOTFS_DIR}/root/app"
-install -d "${ROOTFS_DIR}/root/app/components"
-install -d "${ROOTFS_DIR}/root/app/setup"
 install -d "${ROOTFS_DIR}/root/bin"
 
 install -m 700 files/bin/* "${ROOTFS_DIR}/root/bin"
-install -m 700 files/app/* "${ROOTFS_DIR}/root/app"
-install -m 700 files/app/components/* "${ROOTFS_DIR}/root/app/components"
-install -m 700 files/app/setup/* "${ROOTFS_DIR}/root/app/setup"
+cp -R files/app/* "${ROOTFS_DIR}/root/app"
+chmod -R 700 "${ROOTFS_DIR}/root/app"
 
 # Below here is the rest of the stage2 (builds the Stretch lite image)
 # run script commented out just to give guidance on things that can be done.

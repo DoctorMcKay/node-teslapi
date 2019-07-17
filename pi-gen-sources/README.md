@@ -2,7 +2,8 @@
 
 *Much of the image building code is borrowed from [marcone/teslausb](https://github.com/marcone/teslausb/tree/main-dev/pi-gen-sources).*
 
-To build a ready to flash one-step setup image, all you need to do is download and run `build-image.sh`.
+To build a ready to flash one-step setup image, first make sure that you have Node.js and npm installed, then
+all you need to do is download and run `build-image.sh`.
 
 ```shell
 $ curl https://raw.githubusercontent.com/DoctorMcKay/node-teslapi/master/pi-gen-sources/build-image.sh | bash
