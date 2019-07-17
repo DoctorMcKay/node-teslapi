@@ -2,6 +2,7 @@ const FS = require('fs');
 
 const Logging = require('../components/logging');
 const Parted = require('../components/parted');
+const System = require('../components/system');
 
 const ONE_MEGABYTE = 1000000;
 const MUTABLE_PARTITION_SIZE_BYTES = 100 * ONE_MEGABYTE;
@@ -55,3 +56,4 @@ fstab += 'LABEL=backingfiles /mnt/backingfiles ext4 auto,rw 0 2\n';
 FS.writeFileSync('/etc/fstab', fstab);
 
 Logging.setupInfo('/etc/fstab updated');
+System.reboot();
