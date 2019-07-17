@@ -1,6 +1,6 @@
 #!/bin/sh
 
-sudo apt-get install coreutils quilt parted qemu-user-static debootstrap zerofree zip dosfstools bsdtar libcap2-bin grep rsync xz-utils file git curl
+sudo apt-get install coreutils quilt parted qemu-user-static debootstrap zerofree zip unzip dosfstools bsdtar libcap2-bin grep rsync xz-utils file git curl
 
 rm -rf pi-gen
 git clone https://github.com/RPi-Distro/pi-gen
