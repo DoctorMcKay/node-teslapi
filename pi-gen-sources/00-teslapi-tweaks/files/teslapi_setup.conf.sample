@@ -1,10 +1,10 @@
-# This is the sample configuration file for TeslaPi.
-# Lines beginning with "#" are comments and are ignored. Comments cannot be present after a value (e.g. key=value # comment)
-# Remove the "#" from the beginning of a line to enable it.
-# Rename this file to teslapi_setup.conf and make sure it's in the boot partition/directory.
+#    This is the sample configuration file for TeslaPi.
+#    Lines beginning with "#" are comments and are ignored. Comments cannot be present after a value (e.g. key=value # comment)
+#    Remove the "#" from the beginning of a line to enable it.
+#    Rename this file to teslapi_setup.conf and make sure it's in the boot partition/directory.
 
-# Configure your Wi-Fi network. A Wi-Fi connection with Internet access is required to complete setup.
-# Wi-Fi connections without a password are not supported.
+#    Configure your Wi-Fi network. A Wi-Fi connection with Internet access is required to complete setup.
+#    Wi-Fi connections without a password are not supported.
 # REQUIRED: wifi_ssid and wifi_pass
 # OPTIONAL: wifi_country (defaults to US if omitted)
 wifi_ssid="Your WiFi Name"
