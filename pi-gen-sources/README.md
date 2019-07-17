@@ -9,12 +9,13 @@ To build a ready to flash one-step setup image, do the following:
 1. In the pi-gen folder, run:
     ```
     echo IMG_NAME=teslapi > config
+    echo ENABLE_SSH=1 >> config
     rm -rf stage2/EXPORT_NOOBS stage3 stage4 stage5
     mkdir stage7
     touch stage7/EXPORT_IMAGE
     cp stage2/prerun.sh stage7/prerun.sh
     ```
-1. Copy node-teslapi/pi-gen-sources/00-teslapi-tweaks to the stage7 folder
+1. Copy node-teslapi/pi-gen-sources/00-teslapi-tweaks to the stage7 folder (make sure 00-teslapi-tweaks/00-run.sh is executable)
 1. Run `build.sh` or `build-docker.sh`, depending on how you configured pi-gen to build the image
 1. Sit back and relax, this could take a while (for reference, on a dual-core 2.6 Ghz Intel Core i3 and 50 Mbps internet connection, it took under an hour)
 If all went well, the image will be in the `deploy` folder. Use Etcher or similar tool to flash it.
