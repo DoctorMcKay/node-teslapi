@@ -43,6 +43,7 @@ Logging.setupInfo('Partitioning complete');
 FS.mkdirSync('/mnt/mutable');
 FS.mkdirSync('/mnt/backingfiles');
 FS.mkdirSync('/mnt/cam');
+FS.mkdirSync('/mnt/snapshot_cam');
 FS.mkdirSync('/mnt/remote');
 
 let diskIdentifier = Parted.getDiskIdentifier();
