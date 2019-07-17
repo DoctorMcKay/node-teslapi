@@ -54,8 +54,12 @@ fstab = fstab.replace(/PARTUUID=[0-9a-f]{8}/g, `PARTUUID=${diskIdentifier}`);
 fstab += `PARTUUID=${diskIdentifier}-03 /mnt/mutable ext4 auto,rw 0 2\n`;
 fstab += `PARTUUID=${diskIdentifier}-04 /mnt/backingfiles xfs auto,rw,noatime 0 2\n`;
 FS.writeFileSync('/etc/fstab', fstab);
-
 Logging.setupInfo('/etc/fstab updated');
+
+let cmdline = FS.readFileSync('/boot/cmdline.txt').toString('utf8');
+cmdline = cmdline.replace(/PARTUUID=[0-9a-f]{8}/g, `PARTUUID=${diskIdentifier}`);
+FS.writeFileSync('/boot/cmdline.txt', cmdline);
+Logging.setupInfo('/boot/cmdline.txt updated');
 
 Parted.mountAllDisks();
 FS.writeFileSync('/mnt/mutable/.setup', 'Don\'t delete or move this file or teslapi won\'t boot anymore.\n');
