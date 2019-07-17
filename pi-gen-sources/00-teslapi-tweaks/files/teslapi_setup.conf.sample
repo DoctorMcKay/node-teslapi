@@ -5,6 +5,8 @@
 
 # Configure your Wi-Fi network. A Wi-Fi connection with Internet access is required to complete setup.
 # Wi-Fi connections without a password are not supported.
+# REQUIRED: wifi_ssid and wifi_pass
+# OPTIONAL: wifi_country (defaults to US if omitted)
 wifi_ssid="Your WiFi Name"
 wifi_pass="Your WiFi Password"
 wifi_country=US
