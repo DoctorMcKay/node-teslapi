@@ -32,6 +32,7 @@ async function main() {
 	let cmdline = (await FS.readFile('/boot/cmdline.txt')).toString('utf8').split('\n')[0].trim();
 	if (!cmdline.includes('noswap ro')) {
 		cmdline += ' fastboot noswap ro';
+		cmdline = cmdline.replace('dwc2,g_ether', 'dwc2'); // once we reach this stage, USB ethernet is no longer needed
 		await FS.writeFile('/boot/cmdline.txt', cmdline + '\n');
 	}
 
