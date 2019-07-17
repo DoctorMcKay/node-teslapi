@@ -1,3 +1,4 @@
+const exec = require('child_process').execSync;
 const FS = require('fs');
 
 const SETUP_LOG_PATH = '/boot/teslapi-setup.log';
@@ -7,8 +8,8 @@ const SETUP_LOG_PATH = '/boot/teslapi-setup.log';
  */
 exports.fatalSetupError = function(msg) {
 	console.error('[FATAL] ' + msg);
-	FS.appendFileSync(SETUP_LOG_PATH, timestamp() + ` [FATAL] ${msg}\n`);
-	// TODO blink LED
+	writeToLog(SETUP_LOG_PATH, `[FATAL] ${msg}`);
+	exec('halt');
 	process.exit(1);
 };
 
@@ -17,7 +18,7 @@ exports.fatalSetupError = function(msg) {
  */
 exports.setupInfo = function(msg) {
 	console.log('[info] ' + msg);
-	FS.appendFileSync(SETUP_LOG_PATH, timestamp() + ` [info] ${msg}\n`);
+	writeToLog(SETUP_LOG_PATH, `[info] ${msg}`);
 };
 
 function timestamp() {
@@ -28,4 +29,12 @@ function timestamp() {
 		d.getHours().toString().padStart(2, '0') + ':' +
 		d.getMinutes().toString().padStart(2, '0') + ':' +
 		d.getSeconds().toString().padStart(2, '0');
+}
+
+function writeToLog(logFile, msg) {
+	try {
+		FS.appendFileSync(logFile, timestamp() + ' ' + msg + '\n');
+	} catch (ex) {
+		// whatever, fs is probably read-only
+	}
 }
