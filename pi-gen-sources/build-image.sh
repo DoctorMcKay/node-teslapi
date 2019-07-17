@@ -15,11 +15,10 @@ cp stage2/prerun.sh stage7/prerun.sh
 
 mkdir temp
 cd temp
-curl -L https://github.com/DoctorMcKay/node-teslapi/archive/master.zip > master.zip
-unzip master.zip
-cp -R node-teslapi-master/pi-gen-sources/00-teslapi-tweaks ../stage7
-cp -R node-teslapi-master/app ../stage7/00-teslapi-tweaks/files
-cp -R node-teslapi-master/bin ../stage7/00-teslapi-tweaks/files
+git clone https://github.com/DoctorMcKay/node-teslapi teslapi
+cp -R teslapi/pi-gen-sources/00-teslapi-tweaks ../stage7
+cp -R teslapi/app ../stage7/00-teslapi-tweaks/files
+cp -R teslapi/bin ../stage7/00-teslapi-tweaks/files
 curl -L https://nodejs.org/dist/v10.16.0/node-v10.16.0-linux-armv6l.tar.xz > node-v10.16.0-linux-armv6l.tar.xz
 tar -xf node-v10.16.0-linux-armv6l.tar.xz
 mv node-v10.16.0-linux-armv6l/bin/node ../stage7/00-teslapi-tweaks/files/node
