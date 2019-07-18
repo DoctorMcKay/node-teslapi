@@ -44,6 +44,14 @@ exports.runtimeError = function(msg, fatal) {
 	}
 };
 
+exports.cleanupRuntimeLog = function() {
+	let lines = FS.readFileSync(RUNTIME_LOG_PATH).toString('utf8').replace(/\r\n/g, '\n').split('\n');
+	if (lines.length > 5000) {
+		FS.writeFileSync(RUNTIME_LOG_PATH, lines.slice(lines.length - 5000).join('\n') + '\n');
+		exports.runtimeInfo(`Purged ${lines.length - 5000} lines from runtime log`);
+	}
+};
+
 function timestamp() {
 	let d = new Date();
 	return d.getFullYear() + '-' +

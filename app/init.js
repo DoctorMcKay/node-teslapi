@@ -5,6 +5,7 @@
 const exec = require('child_process').execSync;
 
 const Archive = require('./components/archive');
+const {fork} = require('./components/exec');
 const Hosts = require('./components/hosts');
 const Logging = require('./components/logging');
 const Parted = require('./components/parted');
@@ -25,6 +26,8 @@ main();
 async function main() {
 	await require('./setup/00-run').main();
 
+	await fork('cleanup_runtime_log');
+
 	config = require('./config.json');
 
 	// Setup is complete. Time to run our task loop.
@@ -38,7 +41,7 @@ const State = {
 	"WaitingForArchiveToBecomeUnreachable": 3,      // Archiving is complete. Vdisk is mounted to car, and we're waiting for network connectivity loss at which point we will flip to MountedToCar state
 };
 
-let g_CurrentState = State.MountedToCar;
+let g_CurrentState = State.Startup;
 let g_CountArchiveFailures = 0;
 
 async function taskLoop() {
