@@ -16,8 +16,8 @@ Raspberry Pi Zero W which allows the Pi to interface with a Tesla vehicle via US
 Prepare a Pi Zero W and a micro SD card (at least 64 GB is recommended, but 32 GB should also work well enough).
 Using a high endurance SD card wouldn't be a bad idea.
 
-Download the latest [image](https://github.com/DoctorMcKay/node-teslapi/releases) and flash it to the card using
-a tool like Etcher.
+Download the latest [image](https://github.com/DoctorMcKay/node-teslapi/releases) (it's the zip file that starts with `image_`)
+and flash it to the card using a tool like [Etcher](https://www.balena.io/etcher/).
 
 **Installing TeslaPi on a pre-flashed OS is not supported at this time. Please use the provided TeslaPi images.**
 
@@ -31,13 +31,13 @@ with Internet access is required to finish setup.**
 TeslaPi will automatically configure itself using the settings you entered in the configuration file. The LED on the Pi
 will indicate status during setup:
 
-1. On semi-steadily with occasional pulses: booting up
-2. One flash: Writing config files
-3. Steady slow flashes: Waiting for Internet connectivity
-4. Two flashes: Creating and formatting partitions on the SD card
-5. Three flashes: Allocating space for the virtual disk
-6. Four flashes: Converting root filesystem to read-only
-7. Steady fast flashes: There was a fatal error. Please mount the SD card's boot partition on a computer and examine `teslapi-setup.log` for details.
+1. **On semi-steadily with occasional pulses:** Booting up
+2. **One flash:** Writing config files
+3. **Steady slow flashes:** Waiting for Internet connectivity
+4. **Two flashes:** Creating and formatting partitions on the SD card
+5. **Three flashes:** Allocating space for the virtual disk
+6. **Four flashes:** Converting root filesystem to read-only
+7. **Steady fast flashes:** There was a fatal error. Please mount the SD card's boot partition on a computer and examine `teslapi-setup.log` for details.
 
 While TeslaPi is configuring itself, you can SSH into it using USB ethernet. Plug it into your PC via the Pi's USB data
 port (not its power port) and an ethernet adapter will appear on your PC. USB ethernet is disabled once setup is complete.
@@ -48,3 +48,12 @@ The Pi will reboot a couple times automatically during the setup procedure.
 
 You can build your own image from the latest source, if you wish. Follow the instructions in the
 [pi-gen-sources](https://github.com/DoctorMcKay/node-teslapi/tree/master/pi-gen-sources) readme.
+
+### LED Status
+
+When TeslaPi has finished setup and is running, the LED will indicate what it's currently doing.
+
+- **Steady fast flashes:** There was a fatal error and TeslaPi has shut down. Please log into the Pi and check `/mnt/mutable/teslapi-runtime.log` to see what went wrong.
+- **Normally off, flashing once:** The archive host is unreachable. TeslaPi is exposing the vdisk to the car as a USB drive.
+- **Normally on, flashing once:** TeslaPi has unmounted the vdisk from the car and is archiving clips to the archive host.
+- **Normally on, flashing twice:** TeslaPi has finished archiving, but the archive host is still reachable. TeslaPi is exposing the vdisk to the car as a USB drive. TeslaPi won't try to archive any clips until the archive host becomes unreachable.
