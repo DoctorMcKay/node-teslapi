@@ -8,6 +8,18 @@ const MUTABLE_PARTITION_SIZE_BYTES = 104857600; // 100 MiB
 
 exports.main = main;
 async function main() {
+	let existingPartitions = await Parted.listPartitions();
+	if (existingPartitions.partitions.length == 4 && existingPartitions.partitions[2].filesystem == 'ext4' && existingPartitions.partitions[3].filesystem == 'xfs') {
+		Logging.setupInfo('Partitions are already created');
+		if (!require('fs').existsSync('/mnt/mutable/.setup') || !require('fs').existsSync('/mnt/backingfiles/.setup')) {
+			Logging.fatalSetupError('Partitions are created, but not mounted properly');
+		}
+
+		return;
+	} else if (existingPartitions.partitions.length != 2) {
+		Logging.fatalSetupError(`Cannot proceed with setup as there are ${existingPartitions.partitions.length} existing partitions (expected 2)`);
+	}
+
 	// Wait for Internet connection
 	Logging.setupInfo('Waiting for Internet connection...');
 	System.setLedSteadyBlink(500, 500);
@@ -29,18 +41,6 @@ async function main() {
 
 	// Okay, we're connected to the internet now
 	Logging.setupInfo('Internet connection successfully established');
-
-	let existingPartitions = await Parted.listPartitions();
-	if (existingPartitions.partitions.length == 4 && existingPartitions.partitions[2].filesystem == 'ext4' && existingPartitions.partitions[3].filesystem == 'xfs') {
-		Logging.setupInfo('Partitions are already created');
-		if (!require('fs').existsSync('/mnt/mutable/.setup') || !require('fs').existsSync('/mnt/backingfiles/.setup')) {
-			Logging.fatalSetupError('Partitions are created, but not mounted properly');
-		}
-
-		return;
-	} else if (existingPartitions.partitions.length != 2) {
-		Logging.fatalSetupError(`Cannot proceed with setup as there are ${existingPartitions.partitions.length} existing partitions (expected 2)`);
-	}
 
 	System.setLedBlinkCount(2);
 
