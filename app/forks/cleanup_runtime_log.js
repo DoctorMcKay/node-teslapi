@@ -2,4 +2,8 @@
 // allows us to not worry about the memory getting garbage collected. The process will run and exist, and all its
 // memory will be immediately freed.
 
-require('../components/logging').cleanupRuntimeLog();
+try {
+	require('../components/logging').cleanupRuntimeLog();
+} catch (ex) {
+	// don't care; log file probably doesn't exist
+}
