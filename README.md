@@ -13,8 +13,11 @@ Raspberry Pi Zero W which allows the Pi to interface with a Tesla vehicle via US
 
 ## Installation
 
-Parepare a Pi Zero W and a micro SD card (at least 64 GB is recommended). Download the latest
-[image](https://github.com/DoctorMcKay/node-teslapi/releases) and flash it to the card using a tool like Etcher.
+Prepare a Pi Zero W and a micro SD card (at least 64 GB is recommended, but 32 GB should also work well enough).
+Using a high endurance SD card wouldn't be a bad idea.
+
+Download the latest [image](https://github.com/DoctorMcKay/node-teslapi/releases) and flash it to the card using
+a tool like Etcher.
 
 **Installing TeslaPi on a pre-flashed OS is not supported at this time. Please use the provided TeslaPi images.**
 
