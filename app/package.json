@@ -8,6 +8,7 @@
 		"url": "https://github.com/DoctorMcKay/node-teslapi.git"
 	},
 	"dependencies": {
+		"@doctormckay/stdlib": "^1.10.2",
 		"dotenv": "^8.0.0",
 		"teslajs": "^4.3.11"
 	}

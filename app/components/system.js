@@ -5,18 +5,32 @@ const HTTPS = require('https');
 let g_DeviceLedBlinkCount = 0;
 let g_DeviceLedShotFd = null;
 
-exports.setLedSteadyBlink = function(msOn, msOff) {
-	if (g_DeviceLedShotFd) {
-		FS.closeSync(g_DeviceLedShotFd);
-		g_DeviceLedShotFd = null;
-		g_DeviceLedBlinkCount = 0;
-	}
-
+/**
+ * Make the LED blink in a steady on-off pattern.
+ * @param {int} timeOnMs
+ * @param {int} timeOffMs
+ */
+exports.setLedSteadyBlink = function(timeOnMs, timeOffMs) {
+	disableManualBlink();
 	FS.writeFileSync('/sys/class/leds/led0/trigger', 'timer');
-	FS.writeFileSync('/sys/class/leds/led0/delay_on', msOn.toString());
-	FS.writeFileSync('/sys/class/leds/led0/delay_off', msOff.toString());
+	FS.writeFileSync('/sys/class/leds/led0/delay_off', timeOnMs.toString()); // yeah this is backwards, but it works
+	FS.writeFileSync('/sys/class/leds/led0/delay_on', timeOffMs.toString());
 };
 
+/**
+ * Make the LED blink in a heartbeat fashion (two blinks then pause)
+ * @param {boolean} [invert=false] - If true, then the LED is normally off and blinks to on.
+ */
+exports.setLedHeartbeatBlink = function(invert) {
+	disableManualBlink();
+	FS.writeFileSync('/sys/class/leds/led0/trigger', 'heartbeat');
+	FS.writeFileSync('/sys/class/leds/led0/invert', invert ? '1' : '0');
+};
+
+/**
+ * Make the LED blink a certain number of times, then pause.
+ * @param {int} blinkCount
+ */
 exports.setLedBlinkCount = function(blinkCount) {
 	if (!g_DeviceLedShotFd) {
 		FS.writeFileSync('/sys/class/leds/led0/trigger', 'oneshot');
@@ -28,6 +42,14 @@ exports.setLedBlinkCount = function(blinkCount) {
 
 	g_DeviceLedBlinkCount = blinkCount;
 };
+
+function disableManualBlink() {
+	if (g_DeviceLedShotFd) {
+		FS.closeSync(g_DeviceLedShotFd);
+		g_DeviceLedShotFd = null;
+		g_DeviceLedBlinkCount = 0;
+	}
+}
 
 exports.checkInternetConnectivity = function() {
 	return new Promise((resolve, reject) => {

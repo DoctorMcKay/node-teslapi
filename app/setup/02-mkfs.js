@@ -70,7 +70,7 @@ async function main() {
 	await FS.mkdir('/mnt/backingfiles');
 	await FS.mkdir('/mnt/cam');
 	await FS.mkdir('/mnt/snapshot_cam');
-	await FS.mkdir('/mnt/remote');
+	await FS.mkdir('/mnt/remote_archive');
 
 	let diskIdentifier = await Parted.getDiskIdentifier();
 	Logging.setupInfo(`New disk identifier: ${diskIdentifier}`);
@@ -87,7 +87,8 @@ async function main() {
 	await FS.writeFile('/boot/cmdline.txt', cmdline);
 	Logging.setupInfo('/boot/cmdline.txt updated');
 
-	await Parted.mountAllDisks();
+	await Parted.mountDisk('/mnt/mutable');
+	await Parted.mountDisk('/mnt/backingfiles');
 	await FS.writeFile('/mnt/mutable/.setup', 'Don\'t delete or move this file or teslapi won\'t boot anymore.\n');
 	await FS.writeFile('/mnt/backingfiles/.setup', 'Don\'t delete or move this file or teslapi won\'t boot anymore.\n');
 }

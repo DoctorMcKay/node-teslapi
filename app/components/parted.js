@@ -39,10 +39,6 @@ exports.getDiskIdentifier = async function() {
 	return (await exec(`fdisk -l ${DISK_PATH}`)).match(/Disk identifier: 0x([0-9a-f]{8})/)[1];
 };
 
-exports.mountAllDisks = async function() {
-	await exec('mount -a');
-};
-
 exports.mountDisk = async function(mountpoint) {
 	await exec(`mount ${mountpoint}`);
 };

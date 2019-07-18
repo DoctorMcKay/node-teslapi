@@ -3,12 +3,13 @@ const FS = require('fs');
 const System = require('./system');
 
 const SETUP_LOG_PATH = '/boot/teslapi-setup.log';
+const RUNTIME_LOG_PATH = '/mnt/mutable/teslapi-runtime.log';
 
 /**
  * @param {string} msg
  */
 exports.fatalSetupError = function(msg) {
-	console.error('[FATAL] ' + msg);
+	console.error('setup: [FATAL] ' + msg);
 	writeToLog(SETUP_LOG_PATH, `[FATAL] ${msg}`);
 	System.setLedSteadyBlink(50, 50);
 	process.exit(1);
@@ -18,8 +19,24 @@ exports.fatalSetupError = function(msg) {
  * @param {string} msg
  */
 exports.setupInfo = function(msg) {
-	console.log('[info] ' + msg);
+	console.log('setup: [info] ' + msg);
 	writeToLog(SETUP_LOG_PATH, `[info] ${msg}`);
+};
+
+/**
+ * @param {string} msg
+ */
+exports.runtimeInfo = function(msg) {
+	console.log('[info] ' + msg);
+	writeToLog(RUNTIME_LOG_PATH, `[info] ${msg}`);
+};
+
+/**
+ * @param {string} msg
+ */
+exports.runtimeError = function(msg) {
+	console.log('[error] ' + msg);
+	writeToLog(RUNTIME_LOG_PATH, `[error] ${msg}`);
 };
 
 function timestamp() {

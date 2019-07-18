@@ -10,3 +10,26 @@
 wifi_ssid="Your WiFi Name"
 wifi_pass="Your WiFi Password"
 wifi_country=US
+
+#    Configure your archiving destination. Right now only cifs (SMB, aka Windows file sharing) is supported.
+#    cifs_host: The hostname or IP of the host where we will send clips
+#    cifs_share: The name of the share on the host where we will save clips to (it's the name of the "folder" that you see when you double-click on the host in Network on a Windows machine)
+#    cifs_user: The username to use to access your share. Leave blank if no authentication required.
+#    cifs_pass: The password to use to access your share. Leave blank if no authentication required.
+# REQUIRED: archive_type, archive_cifs_host, archive_cifs_share
+# OPTIONAL: archive_cifs_user, archive_cifs_pass (defaults to blank/no authentication), archive_cifs_version (try 2.1, 2.0, 1.0 if 3.0 doesn't work)
+archive_type=cifs
+archive_cifs_host="1.2.3.4"
+archive_cifs_share="TeslaCam"
+archive_cifs_user=""
+archive_cifs_pass=""
+# archive_cifs_version="3.0"
+
+#    Sometimes, the car might go to sleep (and thus cut power to the Pi) before archiving can fully complete. If you
+#    provide your Tesla account credentials here, the Pi will enable sentry mode while archiving and disable it
+#    afterward (provided it wasn't already on before archiving started) as needed, to keep the car awake. Note that
+#    providing an access token is not currently possible, but any provided Tesla account credentials will never leave
+#    your device (except to go to Tesla) and your email/password will be erased as soon as access tokens are retrieved.
+# OPTIONAL: tesla_account_email, tesla_account_password
+# tesla_account_email="you@example.com"
+# tesla_account_password="h0p3fuL1y_a_sTr0nG_p4$$w0rD"
