@@ -1,4 +1,5 @@
 const {exec} = require('./exec');
+const Logging = require('./logging');
 
 exports.allocate = async function(sizeInKb, filename) {
 	await exec(`fallocate -l ${sizeInKb}K "${filename}"`);
@@ -58,7 +59,11 @@ exports.fixErrors = async function(mountpoint) {
 		return 'Could not find loopback device in losetup output';
 	}
 
-	return await exec(`fsck "${loopbackDevice}" -- -a`);
+	try {
+		await exec(`fsck "${loopbackDevice}" -- -a`, {"stdio": "inherit"});
+	} catch (ex) {
+		Logging.runtimeInfo(`fsck found (and hopefully corrected) errors on ${mountpoint}`);
+	}
 };
 
 function getSecondLineNumber(str) {

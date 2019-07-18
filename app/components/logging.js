@@ -33,10 +33,15 @@ exports.runtimeInfo = function(msg) {
 
 /**
  * @param {string} msg
+ * @param {boolean} [fatal=false]
  */
-exports.runtimeError = function(msg) {
-	console.log('[error] ' + msg);
-	writeToLog(RUNTIME_LOG_PATH, `[error] ${msg}`);
+exports.runtimeError = function(msg, fatal) {
+	console.log(`[${fatal ? 'FATAL' : 'error'}] ${msg}`);
+	writeToLog(RUNTIME_LOG_PATH, `[${fatal ? 'FATAL' : 'error'}] ${msg}`);
+	if (fatal) {
+		System.setLedSteadyBlink(50, 50);
+		process.exit(1);
+	}
 };
 
 function timestamp() {

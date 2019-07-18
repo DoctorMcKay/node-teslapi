@@ -10,8 +10,20 @@ exports.moveFiles = async function(sourceDir, destinationDir) {
 };
 
 async function doMoveFiles(basePath, sourceDir, destinationDir) {
-	let dirContents = await FS.readdir(sourceDir);
-	for (let i = 0; i < dirContents; i++) {
+	let dirContents;
+	try {
+		dirContents = await FS.readdir(sourceDir);
+	} catch (ex) {
+		if (ex.code == 'ENOENT') {
+			// The directory we want to copy does not exist. That's fine.
+			return;
+		}
+
+		// Some other error happened
+		throw ex;
+	}
+
+	for (let i = 0; i < dirContents.length; i++) {
 		if (dirContents[i].indexOf('.') === 0) {
 			continue; // skip dotfiles
 		}
@@ -20,6 +32,7 @@ async function doMoveFiles(basePath, sourceDir, destinationDir) {
 		let stat = await FS.stat(fullPath);
 		if (stat.isDirectory()) {
 			// Recursively process directories
+			Logging.runtimeInfo(`Processing directory ${fullPath}`);
 			await doMoveFiles(basePath, fullPath, destinationDir);
 			// This directory should now be empty
 			try {
@@ -39,7 +52,7 @@ async function doMoveFiles(basePath, sourceDir, destinationDir) {
 				readStream.pipe(writeStream);
 				readStream.on('end', async () => {
 					let elapsed = Date.now() - startTime;
-					let bytesPerSecond = Math.round((stat.size / elapsed) / 1000);
+					let bytesPerSecond = Math.round((stat.size / elapsed) * 1000);
 					Logging.runtimeInfo(`Moving complete in ${elapsed} milliseconds (${StdLib.Units.humanReadableBytes(bytesPerSecond)}/sec). Deleting original.`);
 					await FS.unlink(fullPath);
 					resolve();

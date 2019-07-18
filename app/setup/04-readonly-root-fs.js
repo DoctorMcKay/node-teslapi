@@ -8,11 +8,8 @@ const INHERIT_STDIO = {"stdio": "inherit"};
 
 exports.main = main;
 async function main() {
-	try {
-		await FS.writeFile('/root/.test', '');
-		// If we got this far, then the file system isn't read-only already
-		await FS.unlink('/root/.test');
-	} catch (ex) {
+	let cmdline = (await FS.readFile('/boot/cmdline.txt')).toString('utf8').split('\n')[0].trim();
+	if (cmdline.includes('noswap ro')) {
 		// File system is already read-only
 		Logging.setupInfo('Root filesystem is already read-only');
 		return;
@@ -29,12 +26,10 @@ async function main() {
 	await exec('dpkg --purge rsyslog', INHERIT_STDIO);
 
 	Logging.setupInfo('Configuring /boot/cmdline.txt');
-	let cmdline = (await FS.readFile('/boot/cmdline.txt')).toString('utf8').split('\n')[0].trim();
-	if (!cmdline.includes('noswap ro')) {
-		cmdline += ' fastboot noswap ro';
-		cmdline = cmdline.replace('dwc2,g_ether', 'dwc2'); // once we reach this stage, USB ethernet is no longer needed
-		await FS.writeFile('/boot/cmdline.txt', cmdline + '\n');
-	}
+
+	cmdline += ' fastboot noswap ro';
+	cmdline = cmdline.replace('dwc2,g_ether', 'dwc2'); // once we reach this stage, USB ethernet is no longer needed
+	await FS.writeFile('/boot/cmdline.txt', cmdline + '\n');
 
 	// Move fake-hwclock.data to the mutable partition
 	await FS.mkdir('/mnt/mutable/etc');

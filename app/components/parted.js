@@ -39,12 +39,35 @@ exports.getDiskIdentifier = async function() {
 	return (await exec(`fdisk -l ${DISK_PATH}`)).match(/Disk identifier: 0x([0-9a-f]{8})/)[1];
 };
 
+exports.getMountedDisks = async function() {
+	let disks = {};
+	(await exec('mount')).split('\n').forEach((line) => {
+		// This will not find disks that are mounted at a mountpoint containing a space, but only a wacko would do that anyway
+		let match = line.match(/(\/[^ ]+) on (\/[^ ]+) type ([^ ]+)/);
+		if (match) {
+			disks[match[2]] = {
+				"mountpoint": match[2],
+				"disk": match[1],
+				"filesystem": match[3]
+			};
+		}
+	});
+
+	return disks;
+};
+
 exports.mountDisk = async function(mountpoint) {
-	await exec(`mount ${mountpoint}`);
+	let mountedDisks = await exports.getMountedDisks();
+	if (!mountedDisks[mountpoint]) {
+		await exec(`mount ${mountpoint}`);
+	}
 };
 
 exports.unmountDisk = async function(mountpoint) {
-	await exec(`umount ${mountpoint}`);
+	let mountedDisks = await exports.getMountedDisks();
+	if (mountedDisks[mountpoint]) {
+		await exec(`umount ${mountpoint}`);
+	}
 };
 
 function bytesToNumber(value) {

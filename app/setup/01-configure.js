@@ -61,33 +61,34 @@ async function main() {
 		await FS.writeFile('/etc/wpa_supplicant/wpa_supplicant.conf', wpaSupplicant);
 	}
 
-	// This isn't documented, but if archive_type is blank or omitted, then we won't configure the archive destination.
-	// This is designed for cases where someone is reconfiguring a previously-configured TeslaPi instance but doesn't
-	// want to change their archive destination.
-	if (config.archive_type) {
-		if (config.archive_type != 'cifs') {
-			Logging.fatalSetupError(`Got unexpected archive_type "${config.archive_type}". "cifs" expected.`);
+	if (config.archive_type != 'cifs') {
+		Logging.fatalSetupError(`Got unexpected archive_type "${config.archive_type}". "cifs" expected.`);
+	}
+
+	if (!config.archive_cifs_host || !config.archive_cifs_share) {
+		Logging.fatalSetupError('Missing one of archive_cifs_host or archive_cifs_share');
+	}
+
+	Logging.setupInfo(`Configuring cifs archive destination //${config.archive_cifs_host}/${config.archive_cifs_share}`);
+	await FS.writeFile('/root/.cifsArchiveCredentials', `username=${config.archive_cifs_username || ''}\npassword=${config.archive_cifs_password || ''}\n`);
+	let fstab = '';
+	(await FS.readFile('/etc/fstab')).toString('ascii').split('\n').forEach((line) => {
+		line = line.trim();
+		if (line.includes('/mnt/remote_archive')) {
+			// Skip line with config of any old archive destination
 		}
 
-		if (!config.archive_cifs_host || !config.archive_cifs_share) {
-			Logging.fatalSetupError('Missing one of archive_cifs_host or archive_cifs_share');
-		}
+		fstab += line + '\n';
+	});
 
-		Logging.setupInfo(`Configuring cifs archive destination //${config.archive_cifs_host}/${config.archive_cifs_share}`);
-		await FS.writeFile('/root/.cifsArchiveCredentials', `username=${config.archive_cifs_username || ''}\npassword=${config.archive_cifs_password || ''}\n`);
-		let fstab = '';
-		(await FS.readFile('/etc/fstab')).toString('ascii').split('\n').forEach((line) => {
-			line = line.trim();
-			if (line.includes('/mnt/remote_archive')) {
-				// Skip line with config of any old archive destination
-			}
+	fstab += `//${config.archive_cifs_host}/${config.archive_cifs_share} /mnt/remote_archive cifs vers=${config.archive_cifs_version || '3.0'},credentials=/root/.cifsArchiveCredentials,iocharset=utf8,file_mode=0777,dir_mode=0777 0\n`;
+	await FS.writeFile('/etc/fstab', fstab);
+	Logging.setupInfo('Wrote CIFS mount info to /etc/fstab');
 
-			fstab += line + '\n';
-		});
-
-		fstab += `//${config.archive_cifs_host}/${config.archive_cifs_share} /mnt/remote_archive cifs vers=${config.archive_cifs_version || '3.0'},credentials=/root/.cifsArchiveCredentials,iocharset=utf8,file_mode=0777,dir_mode=0777 0\n`;
-		await FS.writeFile('/etc/fstab', fstab);
-		Logging.setupInfo('Wrote CIFS mount info to /etc/fstab');
+	try {
+		await FS.mkdir('/mnt/remote_archive');
+	} catch (ex) {
+		// don't care
 	}
 
 	await FS.writeFile(LOCAL_CONFIG_FILE_PATH, JSON.stringify(config, undefined, '\t'));

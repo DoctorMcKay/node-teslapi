@@ -39,6 +39,7 @@ const State = {
 };
 
 let g_CurrentState = State.MountedToCar;
+let g_CountArchiveFailures = 0;
 
 async function taskLoop() {
 	try {
@@ -50,6 +51,8 @@ async function taskLoop() {
 				// We need to mount the vdisk to the car
 				System.setLedSteadyBlink(50, 50);
 				Logging.runtimeInfo('In Startup state. Connecting vdisk to car.');
+				await Parted.unmountDisk(MOUNTPOINT_VDISK_CAM);
+				await Parted.unmountDisk(MOUNTPOINT_REMOTE_ARCHIVE);
 				await Vdisk.connectToHost();
 				newState = State.MountedToCar;
 				break;
@@ -81,6 +84,14 @@ async function taskLoop() {
 					break;
 				}
 
+				// Just make sure they're still mounted
+				await Parted.mountDisk(MOUNTPOINT_VDISK_CAM);
+				await Parted.mountDisk(MOUNTPOINT_REMOTE_ARCHIVE);
+
+				// Run fsck to fix any corruption
+				Logging.runtimeInfo('Running fsck on cam vdisk to fix any corruption');
+				await Vdisk.fixErrors(MOUNTPOINT_VDISK_CAM);
+
 				// Archive server is still reachable, so we should still be connected to it.
 				try {
 					await Archive.moveFiles(`${MOUNTPOINT_VDISK_CAM}/TeslaCam/SavedClips`, MOUNTPOINT_REMOTE_ARCHIVE);
@@ -88,10 +99,15 @@ async function taskLoop() {
 					// we don't want to transition into a new state yet because we don't know if this was a transient
 					// error, or if the archive host is really gone
 					Logging.runtimeError(`Error occurred while archiving TeslaCam/SavedClips: ${ex.message}\n${ex.trace}`);
+					if (++g_CountArchiveFailures >= 10) {
+						Logging.runtimeError(`${g_CountArchiveFailures} archive failures. Assuming unrecoverable error.`, true);
+					}
+
 					break;
 				}
 
 				// Archiving succeeded. Unmount things and transition.
+				g_CountArchiveFailures = 0;
 				Logging.runtimeInfo(`Archiving to cifs destination //${config.archive_cifs_host}/${config.archive_cifs_share} succeeded. Unmounting disks and reattaching to host.`);
 				await Parted.unmountDisk(MOUNTPOINT_VDISK_CAM);
 				await Parted.unmountDisk(MOUNTPOINT_REMOTE_ARCHIVE);

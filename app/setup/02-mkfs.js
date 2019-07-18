@@ -70,7 +70,7 @@ async function main() {
 	await FS.mkdir('/mnt/backingfiles');
 	await FS.mkdir('/mnt/cam');
 	await FS.mkdir('/mnt/snapshot_cam');
-	await FS.mkdir('/mnt/remote_archive');
+	//await FS.mkdir('/mnt/remote_archive'); // This is created in the 01-configure setup script
 
 	let diskIdentifier = await Parted.getDiskIdentifier();
 	Logging.setupInfo(`New disk identifier: ${diskIdentifier}`);
