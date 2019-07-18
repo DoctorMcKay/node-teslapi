@@ -76,6 +76,7 @@ exports.checkInternetConnectivity = function() {
 
 exports.reboot = function() {
 	exec('reboot');
+	process.exit(0);
 };
 
 doLedBlink();
