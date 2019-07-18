@@ -20,10 +20,19 @@ if (currentUser != 'root') {
 	Logging.fatalSetupError(`TeslaPi init script needs to be run as root; ran as ${currentUser}`); // exits
 }
 
+let systemBootTime = Date.parse(exec('uptime -s').toString('utf8').trim());
+
 let config = {};
 
 main();
 async function main() {
+	if (Date.now() - systemBootTime < 60000) {
+		// Wait until the system has been up for 60 seconds
+		let sleepTime = 60000 - (Date.now() - systemBootTime);
+		console.log(`[info] Sleeping ${sleepTime} ms because the system has only been up for ${Date.now() - systemBootTime} ms`);
+		await new Promise((resolve) => setTimeout(resolve, sleepTime));
+	}
+
 	await require('./setup/00-run').main();
 
 	await fork('cleanup_runtime_log');
