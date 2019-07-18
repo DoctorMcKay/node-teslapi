@@ -62,6 +62,7 @@ exports.fixErrors = async function(mountpoint) {
 	try {
 		await exec(`fsck "${loopbackDevice}" -- -a`, {"stdio": "inherit"});
 	} catch (ex) {
+		// fsck returns non-zero only if it found errors
 		Logging.runtimeInfo(`fsck found (and hopefully corrected) errors on ${mountpoint}`);
 	}
 };
